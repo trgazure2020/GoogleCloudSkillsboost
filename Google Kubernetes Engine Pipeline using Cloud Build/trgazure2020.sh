@@ -51,7 +51,7 @@ gcloud artifacts repositories create my-repository \
 
 gcloud container clusters create hello-cloudbuild --num-nodes 1 --region $REGION
 
-Sleep 120
+Sleep 180
 
 curl -sS https://webi.sh/gh | sh 
 gh auth login 
