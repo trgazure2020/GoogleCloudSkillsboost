@@ -51,6 +51,8 @@ gcloud artifacts repositories create my-repository \
 
 gcloud container clusters create hello-cloudbuild --num-nodes 1 --region $REGION
 
+Sleep 120
+
 curl -sS https://webi.sh/gh | sh 
 gh auth login 
 gh api user -q ".login"
@@ -60,8 +62,12 @@ git config --global user.email "${USER_EMAIL}"
 echo ${GITHUB_USERNAME}
 echo ${USER_EMAIL}
 
+echo -e "${MAGENTA} Task2 Create the Git repositories!"
+
 gh repo create hello-cloudbuild-app --private 
 gh repo create hello-cloudbuild-env --private
+
+Sleep 15
 
 cd ~
 mkdir hello-cloudbuild-app
@@ -81,10 +87,35 @@ git remote add google https://github.com/${GITHUB_USERNAME}/hello-cloudbuild-app
 git branch -m master
 git add . && git commit -m "initial commit"
 
+echo -e "${MAGENTA} Task3 Create a container image!"
+
 cd ~/hello-cloudbuild-app
 COMMIT_ID="$(git rev-parse --short=7 HEAD)"
 
 gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/my-repository/hello-cloudbuild:${COMMIT_ID}" .
+
+echo -e "${MAGENTA} Have you created Trigger hello-cloudbuild!"
+
+# Confirmation prompt
+while true; do
+    echo -ne "${YELLOW_TEXT}${BOLD_TEXT}Do you want to proceed? (Y/n): ${RESET_FORMAT}"
+    read confirm
+    case "$confirm" in
+        [Yy]) 
+            echo -e "${BLUE_TEXT}Running the command...${RESET_FORMAT}"
+            break
+            ;;
+        [Nn]|"") 
+            echo "Operation canceled."
+            break
+            ;;
+        *) 
+            echo -e "${RED_TEXT}Invalid input. Please enter Y or N.${RESET_FORMAT}" 
+            ;;
+    esac
+done
+
+Sleep 120
 
 cd ~/hello-cloudbuild-app
 git add .
