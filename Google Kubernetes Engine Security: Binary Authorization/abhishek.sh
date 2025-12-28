@@ -48,7 +48,7 @@ gcloud services enable containeranalysis.googleapis.com --project=$DEVSHELL_PROJ
 gcloud services enable binaryauthorization.googleapis.com --project=$DEVSHELL_PROJECT_ID
 
 echo "${YELLOW_TEXT}⏳ Waiting for services to initialize...${RESET_FORMAT}"
-sleep 45
+sleep 60
 
 # Setup binary auth demo
 echo "${BLUE_TEXT}${BOLD_TEXT}📦 Setting up Binary Authorization demo...${RESET_FORMAT}"
@@ -62,14 +62,16 @@ chmod +x create.sh
 chmod +x delete.sh
 chmod 777 validate.sh
 
+echo "${CYAN_TEXT}${BOLD_TEXT}🏗️ Task2 : Set default cluster version${RESET_FORMAT}"
 sed -i 's/validMasterVersions\[0\]/defaultClusterVersion/g' ./create.sh
 
 # Create cluster
 echo "${CYAN_TEXT}${BOLD_TEXT}🏗️ Creating GKE cluster 'my-cluster-1'...${RESET_FORMAT}"
 ./create.sh -c my-cluster-1
+Sleep 90
 
 # Validate cluster
-echo "${BLUE_TEXT}${BOLD_TEXT}🔍 Validating cluster setup...${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}🔍 Task 4 Validating cluster setup...${RESET_FORMAT}"
 ./validate.sh -c my-cluster-1
 
 # Configure binary auth policy
@@ -91,7 +93,7 @@ EOF_CP
 gcloud beta container binauthz policy import policy.yaml
 
 # Docker setup
-echo "${BLUE_TEXT}${BOLD_TEXT}🐳 Configuring Docker and pushing nginx image...${RESET_FORMAT}"
+echo "${BLUE_TEXT}${BOLD_TEXT}🐳 Task 6 Configuring Docker and pushing nginx image...${RESET_FORMAT}"
 docker pull gcr.io/google-containers/nginx:latest
 gcloud auth configure-docker --quiet
 
@@ -102,7 +104,7 @@ docker push "gcr.io/${PROJECT_ID}/nginx:latest"
 gcloud container images list-tags "gcr.io/${PROJECT_ID}/nginx"
 
 # Create nginx pod
-echo "${CYAN_TEXT}${BOLD_TEXT}🚀 Creating nginx pod...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}🚀 Task 7 Creating nginx pod...${RESET_FORMAT}"
 cat << EOF | kubectl create -f -
 apiVersion: v1
 kind: Pod
@@ -157,7 +159,7 @@ echo "${BLUE_TEXT}${BOLD_TEXT}📝 Checking violation logs...${RESET_FORMAT}"
 gcloud logging read "resource.type='k8s_cluster' AND protoPayload.response.reason='VIOLATES_POLICY'" --project=$PROJECT_ID
 
 # Add whitelist pattern
-echo "${GREEN_TEXT}${BOLD_TEXT}✅ Adding whitelist pattern for nginx image...${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 8 Adding whitelist pattern for nginx image...${RESET_FORMAT}"
 IMAGE_PATH=$(echo "gcr.io/${PROJECT_ID}/nginx*")
 
 cat > policy.yaml <<EOF_CP
@@ -194,7 +196,7 @@ EOF
 kubectl delete pod nginx
 
 # Setup attestor
-echo "${MAGENTA_TEXT}${BOLD_TEXT}🔏 Setting up manual attestor...${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}🔏 Task 9 Setting up manual attestor...${RESET_FORMAT}"
 ATTESTOR="manually-verified"
 ATTESTOR_NAME="Manual Attestor"
 ATTESTOR_EMAIL="$(gcloud config get-value core/account)"
@@ -204,6 +206,8 @@ NOTE_DESC="Human Attestation Note Demo"
 
 NOTE_PAYLOAD_PATH="note_payload.json"
 IAM_REQUEST_JSON="iam_request.json"
+
+Sleep 30
 
 cat > ${NOTE_PAYLOAD_PATH} << EOF
 {
@@ -231,7 +235,7 @@ PGP_PUB_KEY="generated-key.pgp"
 sudo apt-get install rng-tools -y
 sudo rngd -r /dev/urandom -y
 gpg --quick-generate-key --yes ${ATTESTOR_EMAIL}
-sleep 10
+sleep 30
 gpg --armor --export "${ATTESTOR_EMAIL}" > ${PGP_PUB_KEY}
 
 # Create attestor
@@ -262,7 +266,7 @@ IMAGE_DIGEST="$(gcloud container images list-tags --format='get(digest)' $IMAGE_
 gcloud beta container binauthz create-signature-payload \
     --artifact-url="${IMAGE_PATH}@${IMAGE_DIGEST}" > ${GENERATED_PAYLOAD}
 
-sleep 5
+sleep 30
 cat "${GENERATED_PAYLOAD}"
 
 gpg --local-user "${ATTESTOR_EMAIL}" \
@@ -270,7 +274,7 @@ gpg --local-user "${ATTESTOR_EMAIL}" \
     --output ${GENERATED_SIGNATURE} \
     --sign ${GENERATED_PAYLOAD}
 
-sleep 5
+sleep 15
 cat "${GENERATED_SIGNATURE}"
 
 gcloud beta container binauthz attestations create \
@@ -279,7 +283,7 @@ gcloud beta container binauthz attestations create \
     --signature-file=${GENERATED_SIGNATURE} \
     --public-key-id="${PGP_FINGERPRINT}"
 
-sleep 20
+sleep 30
 
 gcloud beta container binauthz attestations list \
     --attestor="projects/${PROJECT_ID}/attestors/${ATTESTOR}"
