@@ -1,7 +1,8 @@
-## Monitoring and Logging for Cloud Run Functions
+
+# Manage Rendering for Cloud Storage Website Hosting
 
 
-[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/z4mZza5K4XQ)
+[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)]()
 
 > **Note:** Establish Hybrid Network Connectivity with NCC
 
@@ -18,13 +19,14 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 
-### Run the following Commands in CloudShell
+```bash
 
+PROJECT=$(gcloud config get-value project) && BUCKET="qwiklabs-gcp-03-479c3001b85e-bucket" && gsutil setmeta -h "Content-Type:text/html" gs://${BUCKET}/index.html && gsutil setmeta -h "Content-Type:text/css" gs://${BUCKET}/style.css && gsutil setmeta -h "Content-Type:image/jpeg" gs://${BUCKET}/logo.jpg && gsutil web set -m index.html -e 404.html gs://${BUCKET} && gsutil iam ch allUsers:objectViewer gs://${BUCKET}
 ```
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Monitoring%20and%20Logging%20for%20Cloud%20Run%20Functions/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
-```
+
+
+
+
 <div align="center">
 
 <h3 style="font-family: 'Segoe UI', sans-serif; color: linear-gradient(90deg, #4F46E5, #E114E5);">🌟 Connect with Cloud Enthusiasts 🌟</h3>

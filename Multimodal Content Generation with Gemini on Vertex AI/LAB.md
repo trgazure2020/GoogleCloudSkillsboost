@@ -1,7 +1,8 @@
-## Monitoring and Logging for Cloud Run Functions
+
+# Multimodal Content Generation with Gemini on Vertex AI
 
 
-[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/z4mZza5K4XQ)
+[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/i86rdVw_ri4)
 
 > **Note:** Establish Hybrid Network Connectivity with NCC
 
@@ -18,13 +19,54 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 
 
 
-### Run the following Commands in CloudShell
+```bash
 
+import vertexai
+import urllib.request
+from vertexai.generative_models import GenerativeModel, Part
+
+PROJECT_ID = "your-project-id"
+LOCATION = "your-location"
+
+vertexai.init(project=PROJECT_ID, location=LOCATION)
+
+def load_image_from_url(prompt):
+    print(f"Processing prompt: {prompt}")
+    image_url = "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/scones.jpg"
+    
+    try:
+        with urllib.request.urlopen(image_url) as response:
+            image_bytes = response.read()
+            
+        image_part = Part.from_data(
+            data=image_bytes,
+            mime_type="image/jpeg"
+        )
+        model = GenerativeModel("gemini-2.0-flash")
+
+        response = model.generate_content(
+            [image_part, prompt],
+            generation_config={
+                "temperature": 0.4,
+                "max_output_tokens": 2048
+            }
+        )
+        
+        print("\n--- Model Response ---")
+        print(response.text)
+        return response.text
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    text_prompt = "Write a descriptive caption for this image and suggest a flavor profile."
+    load_image_from_url(text_prompt)
 ```
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Monitoring%20and%20Logging%20for%20Cloud%20Run%20Functions/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
-```
+
+
+
+
 <div align="center">
 
 <h3 style="font-family: 'Segoe UI', sans-serif; color: linear-gradient(90deg, #4F46E5, #E114E5);">🌟 Connect with Cloud Enthusiasts 🌟</h3>

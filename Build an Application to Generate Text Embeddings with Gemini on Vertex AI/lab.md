@@ -1,7 +1,8 @@
-## Monitoring and Logging for Cloud Run Functions
+
+# Build an Application to Generate Text Embeddings with Gemini on Vertex AI
 
 
-[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/z4mZza5K4XQ)
+[![Watch on YouTube](https://img.shields.io/badge/Watch_on_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/C3WIvvFjivs)
 
 > **Note:** Establish Hybrid Network Connectivity with NCC
 
@@ -17,14 +18,28 @@ If you found this helpful, please **Subscribe** to [Dr Abhishek](https://www.you
 - **DM for credit or removal request (no copyright intended) ©All rights and credits for the original content belong to Google Cloud [Google Cloud Skill Boost website](https://www.cloudskillsboost.google/)** 🙏
 
 
+### Update region too
+```bash
+import vertexai
+from vertexai.language_models import TextEmbeddingModel
 
-### Run the following Commands in CloudShell
+def text_embedding(prompt):
+    vertexai.init(project="YOUR_PROJECT_ID", location="us-central1")
+    model = TextEmbeddingModel.from_pretrained("text-embedding-005")
+    embeddings = model.get_embeddings([prompt])
+    vector = embeddings[0].values
+    print(f"Length of embedding vector: {len(vector)}")
+    return vector
 
+if __name__ == "__main__":
+    sample_text = "Natural language processing enables computers to understand human language."
+    print(f"Processing text: '{sample_text}'")
+    text_embedding(sample_text)
 ```
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Monitoring%20and%20Logging%20for%20Cloud%20Run%20Functions/abhishek.sh
-sudo chmod +x abhishek.sh
-./abhishek.sh
-```
+
+
+
+
 <div align="center">
 
 <h3 style="font-family: 'Segoe UI', sans-serif; color: linear-gradient(90deg, #4F46E5, #E114E5);">🌟 Connect with Cloud Enthusiasts 🌟</h3>
