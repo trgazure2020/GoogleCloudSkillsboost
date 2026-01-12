@@ -6,10 +6,6 @@
 
 <h3 style="font-family: 'Segoe UI', sans-serif;">🌟 Connect with fellow cloud enthusiasts, ask questions, and share your learning journey! 🌟</h3>
 
-<p style="font-family: 'Segoe UI', sans-serif;">Don't forget to follow our social handles and subscribe to the channel for more cloud tutorials!</p>
-
--
-
 ### 📌 Important Notice  
 This educational material is provided for learning purposes only to help you:  
 - Understand Google Cloud lab services  
