@@ -12,9 +12,9 @@
 
 ```bash
 
-curl -LO https://raw.githubusercontent.com/Itsabhishek7py/GoogleCloudSkillsboost/refs/heads/main/Connecting%20Cloud%20Networks%20with%20NCC%3A%20Challenge%20Lab/drabhishek.sh
-sudo chmod +x drabhishek.sh
-./drabhishek.sh
+curl -LO https://raw.githubusercontent.com/trgazure2020/GoogleCloudSkillsboost/refs/heads/main/Connecting%20Cloud%20Networks%20with%20NCC%3A%20Challenge%20Lab/gsp528.sh
+sudo chmod +x gsp528.sh
+./gsp528.sh
 ```
 
 
